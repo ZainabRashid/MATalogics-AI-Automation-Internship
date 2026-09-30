@@ -1,0 +1,119 @@
+{
+  "name": "Google student registration",
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "documentId": {
+          "__rl": true,
+          "value": "1D7zkvGFCPkHMyXy_YXwXMqGvwQE7JoGGy27IE3IBkc4",
+          "mode": "list",
+          "cachedResultName": "Student registration form (Responses)",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1D7zkvGFCPkHMyXy_YXwXMqGvwQE7JoGGy27IE3IBkc4/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 496647967,
+          "mode": "list",
+          "cachedResultName": "Form Responses 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1D7zkvGFCPkHMyXy_YXwXMqGvwQE7JoGGy27IE3IBkc4/edit#gid=496647967"
+        },
+        "event": "rowAdded",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "673f35eb-d2d0-468c-8d6d-cdfe1c46d231",
+      "name": "Google Sheets Trigger",
+      "credentials": {
+        "googleSheetsTriggerOAuth2Api": {
+          "id": "iW9oES1cquGudPdQ",
+          "name": "Google Sheets Trigger account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "resource": "databasePage",
+        "dataSourceId": {
+          "__rl": true,
+          "value": "3c1c139d-c731-8025-96dd-000ba0bc1d5a",
+          "mode": "list",
+          "cachedResultName": "Notion Student Database",
+          "cachedResultUrl": "https://app.notion.com/p/3c1c139dc73180cd9160e7112d08d08e"
+        },
+        "title": "={{ $json.Name }}",
+        "propertiesUi": {
+          "propertyValues": [
+            {
+              "key": "Email|email",
+              "emailValue": "={{ $json.Email }}"
+            },
+            {
+              "key": "status|status",
+              "statusValue": "Not started"
+            },
+            {
+              "key": "Text |rich_text",
+              "textContent": "={{ $json['Course '] }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.notion",
+      "typeVersion": 3,
+      "position": [
+        224,
+        0
+      ],
+      "id": "d8f96389-a2ef-4468-881d-0630dfb2947c",
+      "name": "Create a database page",
+      "credentials": {
+        "notionOAuth2Api": {
+          "id": "aOQQuANjvrwdPPOs",
+          "name": "Notion account 5"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Google Sheets Trigger": {
+      "main": [
+        [
+          {
+            "node": "Create a database page",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "2ddca994-12ac-4023-bbec-05ea5df97ef6",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "79eb0939b9cf8c35508bbbc145224b312dda9a035fccb47ac5627937752bc403"
+  },
+  "nodeGroups": [],
+  "id": "ad8hgWG4y511H5fK",
+  "tags": []
+}

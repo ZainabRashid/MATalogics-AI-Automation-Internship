@@ -1,0 +1,128 @@
+{
+  "name": "Client Onboarding",
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "authentication": "oAuth2",
+        "dataSourceId": {
+          "__rl": true,
+          "value": "3c1c139d-c731-8041-bcca-000b0c0e7fd2",
+          "mode": "list",
+          "cachedResultName": "Client Onboarding Database",
+          "cachedResultUrl": "https://app.notion.com/p/3c1c139dc7318096b7addeeb39f7887b"
+        }
+      },
+      "type": "n8n-nodes-base.notionTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "351d187e-11c6-4235-977e-e1d0fae07b9d",
+      "name": "Notion Trigger",
+      "credentials": {
+        "notionOAuth2Api": {
+          "id": "LXhIWPhfRXdW0BFI",
+          "name": "Notion account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "resource": "channel",
+        "channelId": "abc-solutions"
+      },
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.5,
+      "position": [
+        224,
+        0
+      ],
+      "id": "ce21961f-17ce-47b1-8298-165e14c9503f",
+      "name": "Create a channel",
+      "webhookId": "8a7c8fae-740e-4d53-8cfe-6e367848443f",
+      "credentials": {
+        "slackOAuth2Api": {
+          "id": "zYXbnjGY27cPpvFX",
+          "name": "Slack account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "value": "C0BS49AE04Q",
+          "mode": "list",
+          "cachedResultName": "abc-solutions"
+        },
+        "text": "🎉 New Client Onboarded!  Client: ABC Solutions Company: ABC Solutions Email: abc@example.com  Please welcome the new client to the team!",
+        "otherOptions": {}
+      },
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.5,
+      "position": [
+        448,
+        0
+      ],
+      "id": "45b8392d-fa2e-493f-be09-77a876654cf2",
+      "name": "Send a message",
+      "webhookId": "b6025e9b-9464-4ec0-b1de-890c7e88907c",
+      "credentials": {
+        "slackOAuth2Api": {
+          "id": "zYXbnjGY27cPpvFX",
+          "name": "Slack account 2"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Notion Trigger": {
+      "main": [
+        [
+          {
+            "node": "Create a channel",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create a channel": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "9975e112-1394-40ec-947e-eeade4f05f30",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "79eb0939b9cf8c35508bbbc145224b312dda9a035fccb47ac5627937752bc403"
+  },
+  "nodeGroups": [],
+  "id": "0WZ1msUu7F5GPSIO",
+  "tags": []
+}

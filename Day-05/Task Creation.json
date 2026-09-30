@@ -1,0 +1,95 @@
+{
+  "name": "Task Creation",
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "authentication": "oAuth2",
+        "dataSourceId": {
+          "__rl": true,
+          "value": "3bec139d-c731-809b-861b-000b00386f94",
+          "mode": "list",
+          "cachedResultName": "MATalogics Automation",
+          "cachedResultUrl": "https://app.notion.com/p/3bec139dc73180f3ab72f39642db868b"
+        }
+      },
+      "type": "n8n-nodes-base.notionTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -112,
+        -96
+      ],
+      "id": "7a57aee8-4532-4359-9a81-6e0dc7b3daf7",
+      "name": "Notion Trigger",
+      "credentials": {
+        "notionOAuth2Api": {
+          "id": "xkzpElC2TwUPIEqg",
+          "name": "Notion account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "value": "C0BQACCSU49",
+          "mode": "list",
+          "cachedResultName": "n8n-alerts"
+        },
+        "text": "=New task added: {{ $json['Student Registration Database'] }}",
+        "otherOptions": {}
+      },
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.5,
+      "position": [
+        112,
+        -96
+      ],
+      "id": "c94dbe80-1436-4f92-89af-52d73fc3fed3",
+      "name": "Send a message",
+      "webhookId": "5ce02556-f510-4264-94f7-74440eb15355",
+      "credentials": {
+        "slackOAuth2Api": {
+          "id": "zYXbnjGY27cPpvFX",
+          "name": "Slack account 2"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Notion Trigger": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "e108bd85-cd72-4c0e-a900-7762b75743d6",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "79eb0939b9cf8c35508bbbc145224b312dda9a035fccb47ac5627937752bc403"
+  },
+  "nodeGroups": [],
+  "id": "KxtC1KkQ8tWK4ryn",
+  "tags": []
+}
