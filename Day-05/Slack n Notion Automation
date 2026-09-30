@@ -1,0 +1,166 @@
+# Day 05 – Slack & Notion Automation
+
+## Overview
+
+This project was completed as part of the **MATalogics AI Automation Internship – Day 05** assignment.
+
+The objective was to learn the fundamentals of **Slack and Notion** and connect them with **n8n** to build practical business automation workflows.
+
+## Tools & Technologies
+
+* Slack
+* Notion
+* n8n
+* Google Forms
+* Google Sheets
+* Webhooks & Automation Workflows
+
+---
+
+# Part 1 – Slack
+
+## Slack Workspace
+
+A practice Slack workspace named **MATalogics** was created.
+
+## Channels Created
+
+The following channels were created:
+
+* `#n8n-alerts`
+* `#client-updates`
+* `#internship`
+* `#workflow-errors`
+* `#project-status`
+
+## Slack + n8n Integration
+
+Slack was connected with n8n to automate notifications and team updates.
+
+The workflows demonstrate:
+
+* Slack credentials and authentication
+* Sending messages from n8n
+* Selecting Slack channels
+* Mapping data into Slack messages
+* Creating a Slack channel through n8n
+
+---
+
+# Part 2 – Notion
+
+## Notion Workspace
+
+A practice Notion workspace was created to understand databases and workflow automation.
+
+## Task Database
+
+A task database was created with the following properties:
+
+| Property  | Type   |
+| --------- | ------ |
+| Task Name | Title  |
+| Status    | Status |
+| Priority  | Select |
+| Due Date  | Date   |
+| Assignee  | Person |
+
+At least **5 sample tasks** were created in the database.
+
+---
+
+# Part 3 – n8n Automation Workflows
+
+## Workflow 1 – Task Creation
+
+### Flow
+
+**New Task in Notion → n8n Notion Trigger → Slack Notification**
+
+When a new task is added to the Notion database, n8n detects the new record and sends a notification to the selected Slack channel.
+
+### n8n Nodes
+
+* Notion Trigger
+* Slack – Send a Message
+
+---
+
+## Workflow 2 – Client Onboarding
+
+### Flow
+
+**New Client in Notion → n8n Notion Trigger → Create Slack Channel → Notify Team**
+
+When a new client is added to the Notion client database, n8n creates a Slack channel and sends a notification to the team.
+
+### n8n Nodes
+
+* Notion Trigger
+* Slack – Create a Channel
+* Slack – Send a Message
+
+---
+
+## Workflow 3 – Google Student Registration
+
+### Flow
+
+**Google Form → Google Sheets → n8n → Notion**
+
+When a student submits the registration form, the response is stored in Google Sheets. The n8n workflow detects the newly added row and creates a corresponding record in the Notion student database.
+
+### Example Data
+
+| Name  | Email                                     | Course        | Status |
+| ----- | ----------------------------------------- | ------------- | ------ |
+| Ahmad | [ahmad@gmail.com](mailto:ahmad@gmail.com) | AI Automation | New    |
+
+### n8n Nodes
+
+* Google Sheets Trigger
+* Notion – Create a Database Page
+
+---
+
+# Project Files
+
+This folder contains:
+
+* n8n workflow JSON files
+* Slack and Notion documentation
+* Workflow configuration files
+* Assignment-related screenshots/documentation where available
+
+## Workflow Files
+
+* `Task Creation.json`
+* `Client Onboarding.json`
+* `Google Student Registration.json`
+
+---
+
+# Learning Outcomes
+
+Through this assignment, I learned:
+
+* Slack workspace and channel management
+* Slack notifications and team communication
+* Connecting Slack with n8n
+* Using Slack credentials and authentication in n8n
+* Creating and managing Notion databases
+* Working with Notion database properties
+* Connecting Notion with n8n
+* Using Notion triggers in automation workflows
+* Creating Slack channels through automation
+* Using Google Sheets as an automation trigger
+* Mapping Google Sheets data into Notion
+* Designing practical business automation workflows
+
+---
+
+# Conclusion
+
+This project provided practical experience in connecting **Slack, Notion, Google Sheets, Google Forms, and n8n** to create automated business workflows.
+
+The completed workflows demonstrate how information can move between different productivity and communication platforms with minimal manual intervention.
