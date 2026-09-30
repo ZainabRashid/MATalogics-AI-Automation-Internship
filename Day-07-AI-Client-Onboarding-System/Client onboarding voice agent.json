@@ -1,0 +1,319 @@
+{
+  "name": "Client onboarding voice agent",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "client-onboarding",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "470b15fd-163a-41aa-9937-43e8c8789b02",
+      "name": "Webhook",
+      "webhookId": "a3b95ab1-eed5-4e88-aed1-589b39576a76"
+    },
+    {
+      "parameters": {
+        "authentication": "airtableOAuth2Api",
+        "operation": "create",
+        "base": {
+          "__rl": true,
+          "value": "appldeghwEh1lWOmz",
+          "mode": "list",
+          "cachedResultName": "MATalogics AI Operations",
+          "cachedResultUrl": "https://airtable.com/appldeghwEh1lWOmz"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblk4WrjbNZYlMeSf",
+          "mode": "list",
+          "cachedResultName": "Clients",
+          "cachedResultUrl": "https://airtable.com/appldeghwEh1lWOmz/tblk4WrjbNZYlMeSf"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Client ID": "={{ 'CL-' + Date.now() }}",
+            "Company": "={{ $('Code in JavaScript').item.json.company_name }}",
+            "Email": "={{ $('Code in JavaScript').item.json.email }}",
+            "Status": "Active",
+            "Name": "={{ $('Code in JavaScript').item.json.client_name }}",
+            "Service Required": "={{ $('Code in JavaScript').item.json.service_required }}",
+            "Project Description": "={{ $('Code in JavaScript').item.json.project_description }}",
+            "Budget": "={{ $('Code in JavaScript').item.json.budget }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Client ID",
+              "displayName": "Client ID",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Name",
+              "displayName": "Name",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Company",
+              "displayName": "Company",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "Active",
+                  "value": "Active"
+                },
+                {
+                  "name": "Inactive",
+                  "value": "Inactive"
+                },
+                {
+                  "name": "Prospect",
+                  "value": "Prospect"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Service Required",
+              "displayName": "Service Required",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Project Description",
+              "displayName": "Project Description",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Budget",
+              "displayName": "Budget",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.2,
+      "position": [
+        848,
+        0
+      ],
+      "id": "f3a4f5d2-4cf2-4925-ab5b-17320286d95d",
+      "name": "Create a record",
+      "credentials": {
+        "airtableOAuth2Api": {
+          "id": "WqGZ0cYgKWa03tqp",
+          "name": "Airtable account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "const args = $json.body.message.toolCalls[0].function.arguments;\n\nreturn {\n  json: {\n    client_name: args.client_name,\n    company_name: args.company_name,\n    email: args.email,\n    service_required: args.service_required,\n    project_description: args.project_description,\n    budget: args.budget\n  }\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        240,
+        0
+      ],
+      "id": "6fdf4dfe-3b01-4fb7-851e-627052ef299a",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are an AI Client Classification Agent for MATalogics.\n\nAnalyze the client onboarding information below.\n\nClient Name: {{ $json.client_name }}\nCompany: {{ $json.company_name }}\nEmail: {{ $json.email }}\nService Required: {{ $json.service_required }}\nProject Description: {{ $json.project_description }}\nBudget: {{ $json.budget }}\n\nGenerate these four outputs:\n\n1. service_category\n2. priority\n3. summary\n4. next_action\n\nPriority rules:\n- Budget >= 500,000 → HIGH\n- Budget 200,000–499,999 → MEDIUM\n- Budget < 200,000 → LOW\n\nFor service_category, identify the main type of service requested.\n\nFor summary, provide a short one-sentence summary of the client's requirement.\n\nFor next_action, recommend the most appropriate next step for the team.\n\nReturn the four requested fields according to the configured output format.",
+        "hasOutputParser": true,
+        "messages": {
+          "messageValues": []
+        },
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.9,
+      "position": [
+        464,
+        0
+      ],
+      "id": "3e8b7ae6-4fb1-48d4-80cd-067fa55f30f2",
+      "name": "Basic LLM Chain"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-5-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        400,
+        208
+      ],
+      "id": "6b64f8d3-8fc9-4228-9d70-b6ad3402c130",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "JPmbviznpoFnFQ1t",
+          "name": "n8n free OpenAI API credits"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"service_category\": {\n      \"type\": \"string\"\n    },\n    \"priority\": {\n      \"type\": \"string\"\n    },\n    \"summary\": {\n      \"type\": \"string\"\n    },\n    \"next_action\": {\n      \"type\": \"string\"\n    }\n  },\n  \"required\": [\n    \"service_category\",\n    \"priority\",\n    \"summary\",\n    \"next_action\"\n  ]\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        608,
+        208
+      ],
+      "id": "7e83166a-ddb8-43e3-9c89-2feccb5ce7a8",
+      "name": "Structured Output Parser"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain": {
+      "main": [
+        [
+          {
+            "node": "Create a record",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "43e2f179-6ab0-48a5-a4be-f34488ba6559",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "79eb0939b9cf8c35508bbbc145224b312dda9a035fccb47ac5627937752bc403"
+  },
+  "nodeGroups": [],
+  "id": "dkxt0o9IFwxNFz3n",
+  "tags": []
+}
