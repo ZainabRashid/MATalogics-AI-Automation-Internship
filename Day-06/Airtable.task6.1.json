@@ -1,0 +1,344 @@
+{
+  "name": "Airtable.task6.1",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -336,
+        -128
+      ],
+      "id": "1dbf9e9e-1071-4825-9a9c-fa83463f5ff5",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "authentication": "airtableOAuth2Api",
+        "operation": "create",
+        "base": {
+          "__rl": true,
+          "value": "appldeghwEh1lWOmz",
+          "mode": "list",
+          "cachedResultName": "MATalogics AI Operations",
+          "cachedResultUrl": "https://airtable.com/appldeghwEh1lWOmz"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tbl1IcQgo3FLiF4V5",
+          "mode": "list",
+          "cachedResultName": "Leads",
+          "cachedResultUrl": "https://airtable.com/appldeghwEh1lWOmz/tbl1IcQgo3FLiF4V5"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Lead Name": "Ali Khan",
+            "Source": "Website",
+            "Contact Number": "03001234567",
+            "Interested Service": "AI Automation"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Lead Name",
+              "displayName": "Lead Name",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Source",
+              "displayName": "Source",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "Website",
+                  "value": "Website"
+                },
+                {
+                  "name": "Referral",
+                  "value": "Referral"
+                },
+                {
+                  "name": "Event",
+                  "value": "Event"
+                },
+                {
+                  "name": "Other",
+                  "value": "Other"
+                },
+                {
+                  "name": "Social Media",
+                  "value": "Social Media"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Contact Number",
+              "displayName": "Contact Number",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Interested Service",
+              "displayName": "Interested Service",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.2,
+      "position": [
+        -128,
+        -128
+      ],
+      "id": "eac6489a-b748-4860-9992-e9ee77b0fd46",
+      "name": "Create a record",
+      "credentials": {
+        "airtableOAuth2Api": {
+          "id": "bthBf0rXPFGT6hOq",
+          "name": "Airtable account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "airtableOAuth2Api",
+        "operation": "update",
+        "base": {
+          "__rl": true,
+          "value": "appldeghwEh1lWOmz",
+          "mode": "list",
+          "cachedResultName": "MATalogics AI Operations",
+          "cachedResultUrl": "https://airtable.com/appldeghwEh1lWOmz"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tbl1IcQgo3FLiF4V5",
+          "mode": "list",
+          "cachedResultName": "Leads",
+          "cachedResultUrl": "https://airtable.com/appldeghwEh1lWOmz/tbl1IcQgo3FLiF4V5"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Lead Name": "Ali Khan",
+            "Interested Service": "RAG Chatbot"
+          },
+          "matchingColumns": [
+            "Lead Name"
+          ],
+          "schema": [
+            {
+              "id": "Lead Name",
+              "displayName": "Lead Name",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Source",
+              "displayName": "Source",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "Website",
+                  "value": "Website"
+                },
+                {
+                  "name": "Referral",
+                  "value": "Referral"
+                },
+                {
+                  "name": "Event",
+                  "value": "Event"
+                },
+                {
+                  "name": "Other",
+                  "value": "Other"
+                },
+                {
+                  "name": "Social Media",
+                  "value": "Social Media"
+                }
+              ],
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Contact Number",
+              "displayName": "Contact Number",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Interested Service",
+              "displayName": "Interested Service",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.2,
+      "position": [
+        -352,
+        80
+      ],
+      "id": "dd65ab81-f9e5-4cea-9132-1ba47d17d5c4",
+      "name": "Update record",
+      "credentials": {
+        "airtableOAuth2Api": {
+          "id": "bthBf0rXPFGT6hOq",
+          "name": "Airtable account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "airtableOAuth2Api",
+        "operation": "deleteRecord",
+        "base": {
+          "__rl": true,
+          "value": "appldeghwEh1lWOmz",
+          "mode": "list",
+          "cachedResultName": "MATalogics AI Operations",
+          "cachedResultUrl": "https://airtable.com/appldeghwEh1lWOmz"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tbl1IcQgo3FLiF4V5",
+          "mode": "list",
+          "cachedResultName": "Leads",
+          "cachedResultUrl": "https://airtable.com/appldeghwEh1lWOmz/tbl1IcQgo3FLiF4V5"
+        },
+        "id": "recMOkrx51L5JOLOY"
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.2,
+      "position": [
+        -128,
+        80
+      ],
+      "id": "b9750036-4f5e-44f0-a839-c3de2277c467",
+      "name": "Delete a record",
+      "credentials": {
+        "airtableOAuth2Api": {
+          "id": "bthBf0rXPFGT6hOq",
+          "name": "Airtable account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "airtableOAuth2Api",
+        "operation": "search",
+        "base": {
+          "__rl": true,
+          "value": "appldeghwEh1lWOmz",
+          "mode": "list",
+          "cachedResultName": "MATalogics AI Operations",
+          "cachedResultUrl": "https://airtable.com/appldeghwEh1lWOmz"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tbl1IcQgo3FLiF4V5",
+          "mode": "list",
+          "cachedResultName": "Leads",
+          "cachedResultUrl": "https://airtable.com/appldeghwEh1lWOmz/tbl1IcQgo3FLiF4V5"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.2,
+      "position": [
+        128,
+        -32
+      ],
+      "id": "eedf0a66-6053-4384-8af0-6b344dfd33d7",
+      "name": "Search records",
+      "credentials": {
+        "airtableOAuth2Api": {
+          "id": "bthBf0rXPFGT6hOq",
+          "name": "Airtable account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Create a record",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "23142d71-b0e0-4baf-a443-31f49ade9f07",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "79eb0939b9cf8c35508bbbc145224b312dda9a035fccb47ac5627937752bc403"
+  },
+  "nodeGroups": [],
+  "id": "MPUBTJWRPGj7RF2j",
+  "tags": []
+}

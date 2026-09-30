@@ -1,0 +1,94 @@
+{
+  "name": "Project Tracking.airtable",
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "authentication": "airtableOAuth2Api",
+        "baseId": {
+          "__rl": true,
+          "value": "https://airtable.com/appldeghwEh1lWOmz/tblk4WrjbNZYlMeSf/viwWdRPe3a1PBinPu",
+          "mode": "url"
+        },
+        "tableId": {
+          "__rl": true,
+          "value": "https://airtable.com/appldeghwEh1lWOmz/tblFMBziKjDzXWHt3/viwAwQHt6iXQV72O4?blocks=hide",
+          "mode": "url"
+        },
+        "triggerField": "Status",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.airtableTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "f211255b-7976-4743-b35e-a172559e3b2a",
+      "name": "Airtable Trigger",
+      "credentials": {
+        "airtableOAuth2Api": {
+          "id": "IuwZ2yvZVRix7sAf",
+          "name": "Airtable account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "zainabhumayoun@yahoo.com",
+        "subject": "=Project Status Updated - {{$json.fields[\"Project Name\"]}}",
+        "message": "=Project Status Updated  Project: {{$json.fields[\"Project Name\"]}} Assigned To: {{$json.fields[\"Assigned To\"]}} Status: {{$json.fields[\"Status\"]}} Deadline: {{$json.fields[\"Deadline\"]}}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        224,
+        0
+      ],
+      "id": "8fdcd110-63c7-43b6-867d-b4acadd1123f",
+      "name": "Send a message",
+      "webhookId": "677e3f1c-bea2-4196-aabb-99d83c3bf78f",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "jfrygntJO2fcfe7x",
+          "name": "Gmail account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Airtable Trigger": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "b0e6a393-997c-4c88-b837-a0d6404d3cb5",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "79eb0939b9cf8c35508bbbc145224b312dda9a035fccb47ac5627937752bc403"
+  },
+  "nodeGroups": [],
+  "id": "SfjtkacDEj1XzIPS",
+  "tags": []
+}

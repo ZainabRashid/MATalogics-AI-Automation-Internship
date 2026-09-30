@@ -1,0 +1,100 @@
+{
+  "name": "AI Agent Monitoring",
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "authentication": "airtableOAuth2Api",
+        "baseId": {
+          "__rl": true,
+          "value": "https://airtable.com/appldeghwEh1lWOmz/tblFMBziKjDzXWHt3/viwAwQHt6iXQV72O4?blocks=hide",
+          "mode": "url"
+        },
+        "tableId": {
+          "__rl": true,
+          "value": "https://airtable.com/appldeghwEh1lWOmz/tbllvosFHbTSXfFnw/viwfCElch9xgBjcDC?blocks=hide",
+          "mode": "url"
+        },
+        "triggerField": "Deployment Status",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.airtableTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "30bdfc1d-edc4-41cd-88cb-ed35c47f73b4",
+      "name": "Airtable Trigger",
+      "credentials": {
+        "airtableOAuth2Api": {
+          "id": "IuwZ2yvZVRix7sAf",
+          "name": "Airtable account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "value": "C0BQACCSU49",
+          "mode": "list",
+          "cachedResultName": "n8n-alerts"
+        },
+        "text": "=🤖 AI Agent Status Updated  Agent Name: {{$json.fields[\"Agent Name\"]}} Type: {{$json.fields[\"Type\"]}} Deployment Status: {{$json.fields[\"Deployment Status\"]}} Last Updated: {{$json.fields[\"Last Updated\"]}}",
+        "otherOptions": {}
+      },
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.5,
+      "position": [
+        224,
+        0
+      ],
+      "id": "45e68b4c-1036-4079-8345-b2a7076aaf97",
+      "name": "Send a message",
+      "webhookId": "5125eb11-d38b-4c2b-bcd7-379cd84177e3",
+      "credentials": {
+        "slackOAuth2Api": {
+          "id": "zYXbnjGY27cPpvFX",
+          "name": "Slack account 2"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Airtable Trigger": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "bd4aa777-d165-425a-a1bc-314ff4f9c983",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "79eb0939b9cf8c35508bbbc145224b312dda9a035fccb47ac5627937752bc403"
+  },
+  "nodeGroups": [],
+  "id": "o02E518KqOvbOjTj",
+  "tags": []
+}

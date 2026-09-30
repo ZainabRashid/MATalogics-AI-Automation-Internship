@@ -1,0 +1,124 @@
+{
+  "name": "Airtable.task6.3",
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "authentication": "airtableOAuth2Api",
+        "baseId": {
+          "__rl": true,
+          "value": "https://airtable.com/appldeghwEh1lWOmz/tblk4WrjbNZYlMeSf/viwWdRPe3a1PBinPu?blocks=hide",
+          "mode": "url"
+        },
+        "tableId": {
+          "__rl": true,
+          "value": "https://airtable.com/appldeghwEh1lWOmz/tblk4WrjbNZYlMeSf/viwWdRPe3a1PBinPu?blocks=hide",
+          "mode": "url"
+        },
+        "triggerField": "Name",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.airtableTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "b1a2c2bb-f9d7-478c-88f4-11b7549550d2",
+      "name": "Airtable Trigger",
+      "credentials": {
+        "airtableOAuth2Api": {
+          "id": "IuwZ2yvZVRix7sAf",
+          "name": "Airtable account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const clientId = `CL-${Date.now().toString().slice(-6)}`;\n\nreturn {\n  json: {\n    ...$json,\n    generatedClientId: clientId\n  }\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        224,
+        0
+      ],
+      "id": "d6f51ffd-451e-4968-aabd-4e60fd970066",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "value": "C0BQ27M7NSX",
+          "mode": "list",
+          "cachedResultName": "client-updates"
+        },
+        "text": "=🆕 New Client Onboarded  Client Name: {{$json.fields.Name}} Company: {{$json.fields.Company}} Email: {{$json.fields.Email}} Client ID: {{$json.generatedClientId}} Status: {{$json.fields.Status}}",
+        "otherOptions": {}
+      },
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.5,
+      "position": [
+        448,
+        0
+      ],
+      "id": "2834a4cf-7e23-4c4c-95d0-7ec837cc8c81",
+      "name": "Send a message",
+      "webhookId": "89fc5ba0-8992-4b8e-b6d3-7733c61a95cb",
+      "credentials": {
+        "slackOAuth2Api": {
+          "id": "zYXbnjGY27cPpvFX",
+          "name": "Slack account 2"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Airtable Trigger": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "d957605c-9ecd-4e4d-a6ac-7de3b00160c1",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "79eb0939b9cf8c35508bbbc145224b312dda9a035fccb47ac5627937752bc403"
+  },
+  "nodeGroups": [],
+  "id": "Ylj5sPpetymVjKz8",
+  "tags": []
+}

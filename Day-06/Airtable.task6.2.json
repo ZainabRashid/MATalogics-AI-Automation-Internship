@@ -1,0 +1,59 @@
+{
+  "name": "Airtable.task6.2",
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "authentication": "airtableOAuth2Api",
+        "baseId": {
+          "__rl": true,
+          "value": "https://airtable.com/appldeghwEh1lWOmz/tbl1IcQgo3FLiF4V5/viwfHTt7mpDoo4Md7?blocks=hide",
+          "mode": "url"
+        },
+        "tableId": {
+          "__rl": true,
+          "value": "https://airtable.com/appldeghwEh1lWOmz/tbl1IcQgo3FLiF4V5/viwfHTt7mpDoo4Md7?blocks=hide",
+          "mode": "url"
+        },
+        "triggerField": "Lead Name",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.airtableTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "0bb00b3d-a760-4ae3-ad84-672c3e9a5561",
+      "name": "Airtable Trigger",
+      "credentials": {
+        "airtableOAuth2Api": {
+          "id": "IuwZ2yvZVRix7sAf",
+          "name": "Airtable account 2"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {},
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "0efc71ca-c6dd-4ce5-b3bf-5c0d3f54310e",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "79eb0939b9cf8c35508bbbc145224b312dda9a035fccb47ac5627937752bc403"
+  },
+  "nodeGroups": [],
+  "id": "idzJbpRnoa1TsInj",
+  "tags": []
+}
