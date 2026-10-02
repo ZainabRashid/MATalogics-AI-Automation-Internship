@@ -1,0 +1,346 @@
+{
+  "name": "Task 8 day 14 to 17 — Natural Language",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "natural-language-sql",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.2,
+      "position": [
+        -800,
+        -48
+      ],
+      "id": "e38a1c77-5a7b-4fc7-afd5-bc82e497bc9d",
+      "name": "Webhook",
+      "webhookId": "fa0e21f7-f935-4075-9210-519a1ace299f"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are a PostgreSQL SQL generation assistant.\n\nDATABASE TABLE:\nlead_qualification\n\nAVAILABLE COLUMNS:\nid, name, email, phone, company, message, source, lead_score, lead_status, lead_category, created_at\n\nUSER QUESTION:\n{{$json.body.question}}\n\nYOUR JOB:\n\nConvert the user's natural-language database question into either:\n\n1. ONE safe PostgreSQL SELECT query\nOR\n2. The exact word:\nUNSAFE\n\nSECURITY RULES:\n\nIf the user asks to:\n- DELETE data\n- DROP a table/database\n- TRUNCATE data\n- UPDATE records\n- INSERT records\n- ALTER a table/database\n- CREATE a table/database\n- GRANT or REVOKE permissions\n- modify, destroy, remove, erase, clear, wipe, or overwrite database data\n\nreturn ONLY:\n\nUNSAFE\n\nDo NOT generate SQL for destructive or modifying requests.\n\nREAD-ONLY QUERIES:\n\nFor normal database questions, generate ONE PostgreSQL SELECT query.\n\nSupported operations include:\n- SELECT\n- WHERE\n- ORDER BY\n- COUNT\n- AVG\n- GROUP BY\n- LIMIT\n\nExamples:\n\nUser:\nHow many leads do we have?\n\nOutput:\nSELECT COUNT(*) AS total_leads FROM lead_qualification;\n\nUser:\nWhat is the average lead score?\n\nOutput:\nSELECT AVG(lead_score) AS average_lead_score FROM lead_qualification;\n\nUser:\nHow many qualified leads came from Facebook?\n\nOutput:\nSELECT COUNT(*) AS qualified_facebook_leads FROM lead_qualification WHERE source = 'Facebook' AND lead_status = 'qualified';\n\nUser:\nShow me the top 5 leads according to lead score.\n\nOutput:\nSELECT name, email, company, lead_score FROM lead_qualification ORDER BY lead_score DESC LIMIT 5;\n\nUser:\nHow many leads are there for each lead source?\n\nOutput:\nSELECT source, COUNT(*) AS lead_count FROM lead_qualification GROUP BY source ORDER BY lead_count DESC;\n\nUser:\nDelete all leads from the database.\n\nOutput:\nUNSAFE\n\nUser:\nDrop the lead_qualification table.\n\nOutput:\nUNSAFE\n\nUser:\nRemove all Facebook leads.\n\nOutput:\nUNSAFE\n\nFINAL RULES:\n\n- Return ONLY the SQL SELECT query OR the exact word UNSAFE.\n- Do not use markdown.\n- Do not use ```sql.\n- Do not explain your answer.\n- Never generate INSERT, UPDATE, DELETE, DROP, TRUNCATE, ALTER, CREATE, GRANT, or REVOKE.",
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.9,
+      "position": [
+        -576,
+        -48
+      ],
+      "id": "3eb08083-ea71-49db-8ac5-0e17024ccd9f",
+      "name": "AI SQL Generator"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "gpt-4o-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        -576,
+        128
+      ],
+      "id": "ac58eef3-043c-47d3-af04-2c0d89c5ad46",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": null,
+          "name": "",
+          "__aiGatewayManaged": true
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const sql = $json.text || $json.output || $json.response || \"\";\n\nconst cleanedSQL = sql\n  .replace(/```sql/gi, \"\")\n  .replace(/```/g, \"\")\n  .trim();\n\nconst forbidden = /\\b(INSERT|UPDATE|DELETE|DROP|TRUNCATE|ALTER|CREATE|GRANT|REVOKE)\\b/i;\n\nif (forbidden.test(cleanedSQL)) {\n  return [{\n    json: {\n      safe: false,\n      error: \"Unsafe SQL query blocked.\",\n      sql: cleanedSQL\n    }\n  }];\n}\n\nif (!/^SELECT\\b/i.test(cleanedSQL)) {\n  return [{\n    json: {\n      safe: false,\n      error: \"Only SELECT queries are allowed.\",\n      sql: cleanedSQL\n    }\n  }];\n}\n\nreturn [{\n  json: {\n    safe: true,\n    sql: cleanedSQL\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -208,
+        -48
+      ],
+      "id": "022302cd-42cd-4ce1-be55-21841dc82383",
+      "name": "SQL Safety Check"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "0c694871-4f54-4798-9dff-13543edf8d49",
+              "leftValue": "={{$json.safe}}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -32,
+        -48
+      ],
+      "id": "af29667d-4fb5-4501-a6bf-0d3493158a23",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "{\n  \"success\": false,\n  \"message\": \"Unsafe SQL query was blocked.\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        192,
+        48
+      ],
+      "id": "d1671973-0f2c-4969-9653-e19bfe1315f5",
+      "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "{{$json.sql}}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.7,
+      "position": [
+        192,
+        -144
+      ],
+      "id": "47e7946e-09f0-40a6-877a-3e73d2145bef",
+      "name": "Execute a SQL query",
+      "credentials": {
+        "postgres": {
+          "id": "rLVNrhGVFCh8fDNb",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "tableId": "lead_qualification"
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        416,
+        -144
+      ],
+      "id": "b4a938eb-1d32-42b9-8b49-dfe9e95a5d41",
+      "name": "Get many rows",
+      "credentials": {
+        "supabaseApi": {
+          "id": "VNwnw9NfMXhSnvP9",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "gpt-4o-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        576,
+        64
+      ],
+      "id": "687ed398-18de-4ce0-9c28-b85a2c5f8389",
+      "name": "OpenAI Chat Model1",
+      "credentials": {
+        "openAiApi": {
+          "id": null,
+          "name": "",
+          "__aiGatewayManaged": true
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are a helpful database assistant.\n\nThe user asked:\n{{$node[\"Webhook\"].json.body.question}}\n\nThe SQL query executed was:\n{{$node[\"SQL Safety Check\"].json.sql}}\n\nThe PostgreSQL result is:\n{{JSON.stringify($node[\"Execute a SQL query\"].all())}}\n\nYour task is to answer the user's question using the PostgreSQL result.\n\nIMPORTANT RULES:\n\n* Treat the PostgreSQL result above as the ONLY source of truth.\n* Carefully inspect the returned JSON data.\n* If the result contains ANY rows, NEVER say \"No matching records were found.\"\n* If the result contains one row with an aggregate value, report that actual value.\n* For COUNT results, report the actual count.\n* For AVG results, report the actual average.\n* For GROUP BY results, report every returned group and its actual value.\n* For ORDER BY / LIMIT results, report the returned records in their order.\n* If the result contains a row such as {\"source\":\"Website\",\"lead_count\":1}, answer: \"Website has 1 lead.\"\n* If multiple groups are returned, mention each group and its count.\n* If the result is exactly an empty array [], answer: \"No matching records were found.\"\n* A result containing 0 is NOT an empty result. Report the value 0.\n* Never invent or guess information.\n* Never use placeholders such as [insert count], [insert value], X, or unknown.\n* Do not explain the SQL query.\n* Do not mention workflow nodes.\n* Return ONLY the final human-readable answer.\n\nExamples:\n\nPostgreSQL result:\n[{\"source\":\"Website\",\"lead_count\":1}]\n\nAnswer:\nWebsite has 1 lead.\n\nPostgreSQL result:\n[{\"source\":\"Facebook\",\"lead_count\":20},{\"source\":\"Google\",\"lead_count\":15}]\n\nAnswer:\nFacebook has 20 leads and Google has 15 leads.\n\nPostgreSQL result:\n[{\"average_lead_score\":\"75.0000000000000000\"}]\n\nAnswer:\nThe average lead score is 75.\n\nPostgreSQL result:\n[{\"count\":\"75\"}]\n\nAnswer:\nThere are 75 leads.\n\nPostgreSQL result:\n[]\n\nAnswer:\nNo matching records were found.\n\nNow answer the user's question using the actual PostgreSQL result.\n",
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.9,
+      "position": [
+        640,
+        -144
+      ],
+      "id": "4d56ed21-ab7b-4d19-817b-65f9509de9d4",
+      "name": "AI Answer Generator"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n  \"success\": true,\n  \"question\": \"={{$node['Webhook'].json.body.question}}\",\n  \"answer\": \"={{$json.text || $json.output || $json.response}}\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        1008,
+        -144
+      ],
+      "id": "bdb6d416-9df8-4274-a098-c08a7f121109",
+      "name": "Final Response Node"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "AI SQL Generator",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI SQL Generator",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI SQL Generator": {
+      "main": [
+        [
+          {
+            "node": "SQL Safety Check",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "SQL Safety Check": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Execute a SQL query",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute a SQL query": {
+      "main": [
+        [
+          {
+            "node": "Get many rows",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get many rows": {
+      "main": [
+        [
+          {
+            "node": "AI Answer Generator",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Answer Generator",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Answer Generator": {
+      "main": [
+        [
+          {
+            "node": "Final Response Node",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "cfad1c25-87e5-4a1b-a13a-94a4e419881a",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "ffeedcb89e643096834989bed94b88433d50a4e0c3585f70bfebaaeb57f1e9fc"
+  },
+  "nodeGroups": [],
+  "id": "J39mu0WatVL7hvqd",
+  "tags": []
+}

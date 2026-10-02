@@ -1,0 +1,303 @@
+{
+  "name": "Task 7 day 14 to 17 — AI Customer Conversation Memory",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "customer-memory",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.2,
+      "position": [
+        -752,
+        -144
+      ],
+      "id": "7f194373-8a17-415a-8c33-d29378551637",
+      "name": "Webhook",
+      "webhookId": "5afde756-8349-401f-8b7f-21ed05a2fddf"
+    },
+    {
+      "parameters": {
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "customer_conversations",
+          "mode": "list",
+          "cachedResultName": "customer_conversations"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "customer_name": "={{$json.customer_name}}",
+            "customer_email": "={{$json.customer_email}}",
+            "session_id": "={{$json.session_id}}",
+            "role": "= {{$json.role}}",
+            "message": "={{$json.message}}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "customer_name",
+              "displayName": "customer_name",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "customer_email",
+              "displayName": "customer_email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "session_id",
+              "displayName": "session_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "role",
+              "displayName": "role",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "message",
+              "displayName": "message",
+              "required": true,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "created_at",
+              "displayName": "created_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.7,
+      "position": [
+        432,
+        -144
+      ],
+      "id": "130f96a5-16fd-4723-a611-8b36873b405e",
+      "name": "Insert rows in a table",
+      "credentials": {
+        "postgres": {
+          "id": "rLVNrhGVFCh8fDNb",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT\n    customer_name,\n    role,\n    message,\n    created_at\nFROM customer_conversations\nWHERE session_id = '{{$json.body.session_id}}'\nORDER BY created_at ASC;",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.7,
+      "position": [
+        -528,
+        -144
+      ],
+      "id": "b65215f8-abf7-4bd7-958b-f913057da006",
+      "name": "Get Previous Messages",
+      "credentials": {
+        "postgres": {
+          "id": "rLVNrhGVFCh8fDNb",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const history = $input.all().map(item =>\n  `${item.json.role}: ${item.json.message}`\n).join('\\n');\n\nconst current = $('Webhook').first().json.body;\n\nreturn [{\n  json: {\n    customer_name: current.customer_name,\n    customer_email: current.customer_email,\n    session_id: current.session_id,\n    current_message: current.message,\n    conversation_history: history\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -352,
+        -144
+      ],
+      "id": "9c76b0d3-440b-4bd0-80a1-1f6818146bb3",
+      "name": "Build AI Context"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are a customer support assistant.\n\nConversation history:\n{{$json.conversation_history}}\n\nCurrent customer message:\n{{$json.current_message}}\n\nAnswer the customer using the conversation history when relevant.\n\nIf the customer asks for their name, retrieve it from the conversation history.\n\nReturn only the natural-language answer.",
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.9,
+      "position": [
+        -160,
+        -144
+      ],
+      "id": "f9c137f7-3a50-4cd7-b1f7-ed362d91d96d",
+      "name": "Basic LLM Chain"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "gpt-4o-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        -160,
+        32
+      ],
+      "id": "9f006ea8-8edc-4ca2-a2da-0dd52a524f09",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": null,
+          "name": "",
+          "__aiGatewayManaged": true
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const current = $('Webhook').first().json.body;\n\nreturn [\n  {\n    json: {\n      customer_name: current.customer_name,\n      customer_email: current.customer_email,\n      session_id: current.session_id,\n      role: 'user',\n      message: current.message\n    }\n  },\n  {\n    json: {\n      customer_name: current.customer_name,\n      customer_email: current.customer_email,\n      session_id: current.session_id,\n      role: 'assistant',\n      message: $json.text\n    }\n  }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        192,
+        -144
+      ],
+      "id": "947180f7-11e5-431f-905e-e077ae8046da",
+      "name": "Prepare Messages to Save"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Get Previous Messages",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Previous Messages": {
+      "main": [
+        [
+          {
+            "node": "Build AI Context",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build AI Context": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain": {
+      "main": [
+        [
+          {
+            "node": "Prepare Messages to Save",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Messages to Save": {
+      "main": [
+        [
+          {
+            "node": "Insert rows in a table",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "9e91de73-d273-4a77-a9b8-2a60cd03f770",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "ffeedcb89e643096834989bed94b88433d50a4e0c3585f70bfebaaeb57f1e9fc"
+  },
+  "nodeGroups": [],
+  "id": "6p5yAUZHI6CL3v5W",
+  "tags": []
+}
